@@ -7,27 +7,38 @@ type SiteLogoProps = {
   showName?: boolean;
 };
 
+function BrandWordmark({ className }: { className?: string }) {
+  const [lead, tail] = SITE_NAME.includes("-") ? SITE_NAME.split("-", 2) : [SITE_NAME, ""];
+
+  return (
+    <span className={cn("site-wordmark flex items-center leading-none", className)}>
+      <span className="text-white">{lead}</span>
+      {tail ? (
+        <>
+          <span className="text-white">-</span>
+          <span className="text-logo-orange">{tail}</span>
+        </>
+      ) : null}
+    </span>
+  );
+}
+
 export function SiteLogo({ className, imageClassName, showName = true }: SiteLogoProps) {
   if (LOGO_URL) {
     return (
-      <span className={cn("flex items-center gap-2.5", className)}>
+      <span className={cn("inline-flex h-11 items-center gap-2.5 md:h-12 md:gap-3", className)}>
         <img
           src={LOGO_URL}
-          alt={SITE_NAME}
-          className={cn("h-9 w-auto object-contain", imageClassName)}
-          width={160}
-          height={36}
+          alt=""
+          aria-hidden
+          className={cn("h-full w-auto object-contain", imageClassName)}
+          width={200}
+          height={48}
         />
-        {showName ? (
-          <span className="sr-only font-bold tracking-tight text-foreground">{SITE_NAME}</span>
-        ) : null}
+        {showName ? <BrandWordmark /> : null}
       </span>
     );
   }
 
-  return (
-    <span className={cn("font-bold tracking-tight text-foreground", className)}>
-      {SITE_NAME}
-    </span>
-  );
+  return <BrandWordmark className={className} />;
 }

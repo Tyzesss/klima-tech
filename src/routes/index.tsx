@@ -12,6 +12,7 @@ import {
   Flame,
   AlertTriangle,
   CheckCircle2,
+  Snowflake,
   Menu,
   X,
   Star,
@@ -105,6 +106,7 @@ const SERVICE_ICONS: Record<ServiceIcon, typeof Wrench> = {
   "alert-triangle": AlertTriangle,
   "check-circle": CheckCircle2,
   flame: Flame,
+  snowflake: Snowflake,
 };
 
 const services = SERVICES.map((s) => ({ ...s, icon: SERVICE_ICONS[s.icon] }));
@@ -572,10 +574,25 @@ function Index() {
           glow={{ x: "22%", y: "58%", strength: 0.035 }}
         >
           <MobileCarousel dark items={services} renderItem={(s) => <ServiceCard s={s} index={services.indexOf(s)} />} />
-          <div className="hidden md:grid grid-cols-3 gap-5">
-            {services.map((s, i) => (
-              <ServiceCard key={s.title} s={s} index={i} />
-            ))}
+          <div className="hidden md:grid md:grid-cols-6 md:gap-5">
+            {services.map((s, i) => {
+              const remainder = services.length % 3;
+              const centerLastPair = remainder === 2 && i === services.length - 2;
+              const centerLastSingle = remainder === 1 && i === services.length - 1;
+
+              return (
+                <div
+                  key={s.title}
+                  className={cn(
+                    "col-span-2",
+                    centerLastPair && "md:col-start-2",
+                    centerLastSingle && "md:col-start-3",
+                  )}
+                >
+                  <ServiceCard s={s} index={i} />
+                </div>
+              );
+            })}
           </div>
 
           <div className="mt-8">
